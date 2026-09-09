@@ -317,7 +317,7 @@ os.makedirs(NLTK_DATA_DIR, exist_ok=True)
 nltk.data.path.insert(0, NLTK_DATA_DIR)
 
 def setup_nltk():
-    resources = ['stopwords', 'punkt', 'wordnet', 'omw-1.4']
+    resources = ['stopwords', 'punkt', 'wordnet', 'omw-1.4', 'punkt_tab']
     for r in resources:
         try:
             nltk.download(r, download_dir=NLTK_DATA_DIR, quiet=True)

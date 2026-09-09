@@ -19,3 +19,5 @@ langdetect
 deep-translator
 scipy
 python-multipart
+pyotp
+qrcode

@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -62,7 +63,7 @@ export default function Login({ onLoginSuccess }) {
         payload.totp_code = totpCode;
       }
 
-      const response = await axios.post('http://127.0.0.1:8000/api/login', payload);
+      const response = await axios.post(`${API_BASE}/api/login`, payload);
 
       const { access_token, user } = response.data;
 

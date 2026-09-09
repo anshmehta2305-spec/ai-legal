@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -15,7 +16,7 @@ export default function ForgotPassword() {
     if (!email) return;
     setLoading(true);
     try {
-      await axios.post('http://127.0.0.1:8000/api/forgot-password', { email });
+      await axios.post(`${API_BASE}/api/forgot-password`, { email });
       setSuccess(true);
       addToast('Password reset link sent if email exists.', 'success');
     } catch (err) {

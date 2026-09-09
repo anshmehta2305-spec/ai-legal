@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -27,7 +28,7 @@ export default function ResetPassword() {
 
     setLoading(true);
     try {
-      await axios.post('http://127.0.0.1:8000/api/reset-password', {
+      await axios.post(`${API_BASE}/api/reset-password`, {
         token: resetToken,
         new_password: password
       });

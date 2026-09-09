@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, History, MessageSquare, X } from 'lucide-react';
 import axios from 'axios';
@@ -42,7 +43,7 @@ export default function GlobalSearch({ token }) {
     const fetchResults = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://127.0.0.1:8000/api/search?q=${query}`, {
+        const res = await axios.get(`${API_BASE}/api/search?q=${query}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setResults(res.data.results);

@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -26,7 +27,7 @@ export default function About({ token }) {
     const fetchMetrics = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/metrics', {
+        const response = await axios.get(`${API_BASE}/api/metrics`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const apiData = response.data;

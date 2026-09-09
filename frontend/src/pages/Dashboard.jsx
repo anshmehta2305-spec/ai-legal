@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -47,7 +48,7 @@ export default function Dashboard({ token, user }) {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/metrics', {
+        const response = await axios.get(`${API_BASE}/api/metrics`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setMetrics(response.data);
@@ -58,7 +59,7 @@ export default function Dashboard({ token, user }) {
     fetchMetrics();
     const fetchActivities = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/activity', {
+        const response = await axios.get(`${API_BASE}/api/activity`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setActivities(response.data.activity);
@@ -83,7 +84,7 @@ export default function Dashboard({ token, user }) {
       const uploadPromises = files.map(file => {
         const formData = new FormData();
         formData.append('file', file);
-        return axios.post('http://127.0.0.1:8000/api/upload/document', formData, {
+        return axios.post(`${API_BASE}/api/upload/document`, formData, {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
         });
       });
@@ -120,14 +121,14 @@ export default function Dashboard({ token, user }) {
     try {
       if (summarizeFirst) {
         addToast('Summarizing input text...', 'info');
-        const sumRes = await axios.post('http://127.0.0.1:8000/api/summarize', { case_description: finalDescription }, {
+        const sumRes = await axios.post(`${API_BASE}/api/summarize`, { case_description: finalDescription }, {
           headers: { Authorization: `Bearer ${token}` }
         });
         finalDescription = sumRes.data.summary;
         addToast('Summarization complete', 'success');
       }
 
-      const response = await axios.post('http://127.0.0.1:8000/api/predict',
+      const response = await axios.post(`${API_BASE}/api/predict`,
         { model_name: model, case_description: finalDescription },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -151,30 +152,30 @@ export default function Dashboard({ token, user }) {
       let res;
       switch (tabName) {
         case 'explanation':
-          res = await axios.post('http://127.0.0.1:8000/api/explain',
+          res = await axios.post(`${API_BASE}/api/explain`,
             { case_description: caseDescription, model_name: model, predicted_section: prediction.primary_prediction.section },
             { headers: { Authorization: `Bearer ${token}` } }
           );
           break;
         case 'similarCases':
-          res = await axios.post('http://127.0.0.1:8000/api/similar-cases',
+          res = await axios.post(`${API_BASE}/api/similar-cases`,
             { case_description: caseDescription, top_n: 3 },
             { headers: { Authorization: `Bearer ${token}` } }
           );
           break;
         case 'recommendations':
-          res = await axios.get(`http://127.0.0.1:8000/api/recommendations/${prediction.primary_prediction.section}`,
+          res = await axios.get(`${API_BASE}/api/recommendations/${prediction.primary_prediction.section}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           break;
         case 'timeline':
-          res = await axios.post('http://127.0.0.1:8000/api/generate-timeline',
+          res = await axios.post(`${API_BASE}/api/generate-timeline`,
             { case_description: caseDescription },
             { headers: { Authorization: `Bearer ${token}` } }
           );
           break;
         case 'fir':
-          res = await axios.post('http://127.0.0.1:8000/api/generate-fir',
+          res = await axios.post(`${API_BASE}/api/generate-fir`,
             {
               case_description: caseDescription,
               complainant_name: user?.name || "John Doe",
@@ -189,7 +190,7 @@ export default function Dashboard({ token, user }) {
           );
           break;
         case 'legal':
-          res = await axios.get(`http://127.0.0.1:8000/api/legal-sections/${prediction.primary_prediction.section}`,
+          res = await axios.get(`${API_BASE}/api/legal-sections/${prediction.primary_prediction.section}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           break;

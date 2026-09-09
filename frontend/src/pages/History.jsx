@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -15,7 +16,7 @@ export default function History({ token }) {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await axios.get('http://127.0.0.1:8000/api/history', {
+        const res = await axios.get(`${API_BASE}/api/history`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setHistory(res.data);
@@ -45,7 +46,7 @@ export default function History({ token }) {
     const updatedBookmark = isBookmarked !== null ? isBookmarked : selectedItem.is_bookmarked;
 
     try {
-      await axios.put(`http://127.0.0.1:8000/api/history/${selectedItem.id}`, {
+      await axios.put(`${API_BASE}/api/history/${selectedItem.id}`, {
         is_bookmarked: updatedBookmark,
         tags: selectedItem.tags || '',
         notes: notes

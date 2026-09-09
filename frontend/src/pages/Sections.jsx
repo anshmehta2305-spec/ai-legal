@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -12,7 +13,7 @@ export default function Sections({ token }) {
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const res = await axios.get('http://127.0.0.1:8000/api/sections');
+        const res = await axios.get(`${API_BASE}/api/sections`);
         setSections(res.data || {});
       } catch (err) {
         addToast("Failed to load sections reference", "error");

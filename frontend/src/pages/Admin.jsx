@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -13,8 +14,8 @@ export default function Admin({ token }) {
     const fetchAdminData = async () => {
       try {
         const [logsRes, usersRes] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/api/admin/audit-logs', { headers: { Authorization: `Bearer ${token}` } }),
-          axios.get('http://127.0.0.1:8000/api/admin/users', { headers: { Authorization: `Bearer ${token}` } })
+          axios.get(`${API_BASE}/api/admin/audit-logs`, { headers: { Authorization: `Bearer ${token}` } }),
+          axios.get(`${API_BASE}/api/admin/users`, { headers: { Authorization: `Bearer ${token}` } })
         ]);
         setLogs(logsRes.data);
         setUsers(usersRes.data);

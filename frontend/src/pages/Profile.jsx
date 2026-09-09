@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -37,7 +38,7 @@ export default function Profile({ token, user, onUpdateUser }) {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/profile', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${API_BASE}/api/profile`, { headers: { Authorization: `Bearer ${token}` } });
       setFormData({
         name: res.data.name || '',
         mobile: res.data.mobile || '',
@@ -50,14 +51,14 @@ export default function Profile({ token, user, onUpdateUser }) {
 
   const fetchSessions = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/sessions', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${API_BASE}/api/sessions`, { headers: { Authorization: `Bearer ${token}` } });
       setSessions(res.data.sessions);
     } catch (err) { console.error(err); }
   };
 
   const fetchLoginHistory = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/login-history', { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${API_BASE}/api/login-history`, { headers: { Authorization: `Bearer ${token}` } });
       setLoginHistory(res.data.history);
     } catch (err) { console.error(err); }
   };
@@ -65,7 +66,7 @@ export default function Profile({ token, user, onUpdateUser }) {
   const handleSetup2FA = async () => {
     setTfaLoading(true);
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/2fa/setup', {}, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.post(`${API_BASE}/api/2fa/setup`, {}, { headers: { Authorization: `Bearer ${token}` } });
       setQrCode(res.data.qr_code);
     } catch (err) { addToast('Failed to setup 2FA', 'error'); }
     finally { setTfaLoading(false); }
@@ -75,7 +76,7 @@ export default function Profile({ token, user, onUpdateUser }) {
     e.preventDefault();
     setTfaLoading(true);
     try {
-      await axios.post('http://127.0.0.1:8000/api/2fa/verify', { totp_code: totpCode }, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.post(`${API_BASE}/api/2fa/verify`, { totp_code: totpCode }, { headers: { Authorization: `Bearer ${token}` } });
       addToast('2FA Enabled Successfully', 'success');
       onUpdateUser({ ...user, totp_enabled: true });
       setQrCode(null);
@@ -88,7 +89,7 @@ export default function Profile({ token, user, onUpdateUser }) {
     e.preventDefault();
     setTfaLoading(true);
     try {
-      await axios.post('http://127.0.0.1:8000/api/2fa/disable', { totp_code: totpCode }, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.post(`${API_BASE}/api/2fa/disable`, { totp_code: totpCode }, { headers: { Authorization: `Bearer ${token}` } });
       addToast('2FA Disabled', 'success');
       onUpdateUser({ ...user, totp_enabled: false });
       setTotpCode('');
@@ -98,7 +99,7 @@ export default function Profile({ token, user, onUpdateUser }) {
 
   const handleRevokeSession = async (id) => {
     try {
-      await axios.post(`http://127.0.0.1:8000/api/sessions/revoke/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.post(`${API_BASE}/api/sessions/revoke/${id}`, {}, { headers: { Authorization: `Bearer ${token}` } });
       fetchSessions();
       addToast('Session revoked', 'success');
     } catch (err) { addToast('Failed to revoke session', 'error'); }
@@ -112,7 +113,7 @@ export default function Profile({ token, user, onUpdateUser }) {
         ...formData,
         age: parseInt(formData.age, 10) || 0
       };
-      await axios.post('http://127.0.0.1:8000/api/profile/update', payload, {
+      await axios.post(`${API_BASE}/api/profile/update`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       addToast('Profile updated successfully', 'success');
@@ -138,7 +139,7 @@ export default function Profile({ token, user, onUpdateUser }) {
     }
     setPassLoading(true);
     try {
-      await axios.post('http://127.0.0.1:8000/api/profile/password', passData, {
+      await axios.post(`${API_BASE}/api/profile/password`, passData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       addToast('Password updated successfully', 'success');

@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useToast } from '../contexts/ToastContext';
@@ -26,7 +27,7 @@ export default function ChatBot({ token }) {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/chat',
+      const res = await axios.post(`${API_BASE}/api/chat`,
         { message: userMsg },
         { headers: { Authorization: `Bearer ${token}` } }
       );

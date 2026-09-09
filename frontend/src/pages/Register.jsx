@@ -1,3 +1,4 @@
+import API_BASE from "../api";
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -80,7 +81,7 @@ export default function Register() {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/register', {
+      const response = await axios.post(`${API_BASE}/api/register`, {
         name: formData.name,
         mobile: formData.mobile,
         gender: formData.gender,

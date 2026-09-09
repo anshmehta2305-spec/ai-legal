@@ -20,8 +20,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-import torch
-from transformers import pipeline
+# PyTorch/Transformers removed for lightweight cloud hosting
 from PyPDF2 import PdfReader
 import docx
 from PIL import Image
@@ -1067,35 +1066,30 @@ def get_metrics(current_user: str = Depends(get_current_user)):
 
 # Root endpoint for healthcheck
 
-# Global instances for NLP pipelines
-summarizer = None
-
-def get_summarizer():
-    global summarizer
-    if summarizer is None:
-        device = 0 if torch.cuda.is_available() else -1
-        try:
-            summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=device)
-        except Exception as e:
-            print("Failed to load summarizer:", e)
-    return summarizer
+def extractive_summarize(text: str, num_sentences: int = 3) -> str:
+    """Lightweight extractive summarizer using sentence-level TF-IDF scoring."""
+    import re
+    sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text) if len(s.strip()) > 10]
+    if len(sentences) <= num_sentences:
+        return text.strip()
+    try:
+        tfidf = TfidfVectorizer(stop_words='english')
+        tfidf_matrix = tfidf.fit_transform(sentences)
+        sentence_scores = np.array(tfidf_matrix.sum(axis=1)).flatten()
+        top_indices = sorted(sentence_scores.argsort()[-num_sentences:])
+        summary = " ".join([sentences[i] for i in top_indices])
+        return summary
+    except Exception:
+        return " ".join(sentences[:num_sentences])
 
 @app.post("/api/summarize")
 @limiter.limit("10/minute")
 def summarize_text(request: Request, body: SummarizeRequestSchema, current_user: str = Depends(get_current_user)):
     if not body.case_description.strip():
         raise HTTPException(status_code=400, detail="Text cannot be empty")
-        
     try:
-        summ = get_summarizer()
-        if summ is None:
-            return {"summary": "Summarization model unavailable. " + body.case_description[:200] + "..."}
-        
-        # Adjust max_length based on input length
-        input_len = len(body.case_description.split())
-        max_len = min(130, max(30, int(input_len * 0.5)))
-        result = summ(body.case_description, max_length=max_len, min_length=30, do_sample=False)
-        return {"summary": result[0]['summary_text']}
+        summary = extractive_summarize(body.case_description, num_sentences=3)
+        return {"summary": summary}
     except Exception as e:
         return {"summary": "Error summarizing: " + str(e)}
 

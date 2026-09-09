@@ -9,8 +9,6 @@ passlib[bcrypt]
 bcrypt
 pydantic
 email-validator
-transformers
-torch
 PyPDF2
 python-docx
 Pillow

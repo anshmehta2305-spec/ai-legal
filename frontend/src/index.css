@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Default Dark Theme (Legal Aesthetic) */
+  --bg-primary: #05070B;
+  --bg-secondary: #0A0E17;
+  --bg-tertiary: #121824;
+  --text-primary: #E5E7EB;
+  --text-secondary: #9CA3AF;
+  --gold-primary: #C5A880;
+  --gold-secondary: #E5C49F;
+  --gold-tertiary: #A68B6A;
+  --border-color: rgba(36, 47, 65, 0.6);
+  --glass-bg: rgba(18, 24, 36, 0.7);
+  --card-bg: rgba(18, 24, 36, 0.5);
+  --scrollbar-track: #05070B;
+  --scrollbar-thumb: #C5A880;
+  --shadow-color: rgba(197, 168, 128, 0.1);
+  --error-bg: rgba(225, 29, 72, 0.15);
+  --error-border: rgba(225, 29, 72, 0.3);
+  --error-text: #fb7185;
+}
+
+[data-theme='light'] {
+  /* Light Theme (Parchment/Paper Aesthetic) */
+  --bg-primary: #F4EAD5; /* Deep parchment */
+  --bg-secondary: #FDFBF7; /* Paper */
+  --bg-tertiary: #F2E8D5;
+  --text-primary: #2C1E16; /* Very dark brown/black ink */
+  --text-secondary: #5C4033; /* Brown ink */
+  --gold-primary: #A67C00; /* Darker gold for contrast */
+  --gold-secondary: #8B6508;
+  --gold-tertiary: #C5A880;
+  --border-color: rgba(166, 124, 0, 0.3);
+  --glass-bg: rgba(253, 251, 247, 0.85);
+  --card-bg: rgba(253, 251, 247, 0.9);
+  --scrollbar-track: #F4EAD5;
+  --scrollbar-thumb: #A67C00;
+  --shadow-color: rgba(166, 124, 0, 0.15);
+  --error-bg: rgba(225, 29, 72, 0.1);
+  --error-border: rgba(225, 29, 72, 0.2);
+  --error-text: #e11d48;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply font-sans antialiased overflow-x-hidden transition-colors duration-300;
+  }
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-color);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-secondary);
+}
+
+/* Custom gold text-shadow/glow */
+.text-gold-glow {
+  text-shadow: 0 0 10px rgba(197, 168, 128, 0.4);
+}
+
+[data-theme='light'] .text-gold-glow {
+  text-shadow: 0 0 10px rgba(166, 124, 0, 0.3);
+}
+
+/* Custom gold border-glow */
+.border-gold-glow {
+  box-shadow: 0 0 15px rgba(197, 168, 128, 0.2);
+}
+
+[data-theme='light'] .border-gold-glow {
+  box-shadow: 0 0 15px rgba(166, 124, 0, 0.2);
+}
+
+/* Keyframes for animations */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slide-in {
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
